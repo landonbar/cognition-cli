@@ -1,0 +1,77 @@
+#!/bin/sh
+':' //; exec "$(command -v nodejs || command -v node)" "$0" "$@"
+
+var fs=require('fs');
+
+var typ='cog';
+var name;
+
+
+var template='';
+var len = process.argv.length;
+
+process.argv.forEach(function (val, index, array) {
+    //console.log(index + ': ' + val);
+});
+
+if (len<3) return;
+if (len==3) name=process.argv[2];
+else {
+    typ=process.argv[2];
+    name=process.argv[3];
+}
+
+
+
+if (typ=='cog') {
+
+    template=
+        '<blueprint>\n' +
+        '  \n' +
+        '  <data name="data' + name + '" value="' + name + '" />\n' +
+        '  <sensor watch="data' + name + '" run="render" />\n' +
+        '  \n' +
+        '</blueprint>\n' +
+        '\n' +
+        '<display>\n' +
+        '  \n' +
+        '  <div id="' + name + '">\n' +
+        '  </div>\n' +
+        '    \n' +
+        '</display>\n' +
+        '\n' +
+        '<script>\n' +
+        '  $.cog({\n' +
+        '    \n' +
+        '    render: function(msg){\n' +
+        '      this.' + name + '.text(msg);\n' +
+        '    }\n' +
+        '    \n' +
+        '  });\n' +
+        '</script>\n';
+
+    fs.writeFileSync('./'+name+'.html', template);
+
+}
+
+if (typ=='alloy') {
+
+    template='<blueprint>\n  \n  \n  \n</blueprint>\n\n' +
+        '<script>\n  $.cog({\n    \n    \n    \n  });\n</script>\n';
+
+    fs.writeFileSync('./'+name+'.html', template);
+
+}
+//
+//<sensor node="newSearch" on="keydown" filter="isEnter" transform="trimText" pipe="searchString" />
+//    <sensor watch="searchString" adapt="trimText" filter="hasText" pipe="cmd_DoSearch" />
+//    <data name="filter" value="noFilter" />
+//
+//    <command name="cmd_MarkTodo" need="storage" transform="markTodo" pipe="storage" />
+//    <command name="cmd_CreateTodo" need="storage" transform="createTodo" pipe="storage" />
+//    <command name="cmd_DestroyTodo" need="storage" transform="destroyTodo" pipe="storage" />
+//    <command name="cmd_MarkAll" need="storage" transform="markAll" pipe="storage" />
+//    <command name="cmd_ClearCompleted" need="storage" transform="clearCompleted" pipe="storage" />
+//    <command name="cmd_Refresh" need="storage" extract="storage" pipe="storage" />
+//
+//    <sensor watch="storage" run="writeLocalStorage"  />
